@@ -1,6 +1,8 @@
 package com.taskadapter.redmineapi.bean;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Redmine's project versions<br/>
@@ -24,7 +26,8 @@ public class Version implements Identifiable {
     private Date dueDate;
     private Date createdOn;
     private Date updatedOn;
-
+    
+    private List<CustomField> customFields = new ArrayList<CustomField>();
     /**
      * Required for reflective construction.
      */
@@ -89,6 +92,9 @@ public class Version implements Identifiable {
                 return false;
         } else if (!updatedOn.equals(other.updatedOn))
             return false;
+        // customFields never null.
+        if(!customFields.equals(other.customFields))
+        	return false;
         return true;
     }
 
@@ -140,9 +146,24 @@ public class Version implements Identifiable {
         result = prime * result + ((status == null) ? 0 : status.hashCode());
         result = prime * result
                 + ((updatedOn == null) ? 0 : updatedOn.hashCode());
+        
+        result = prime *result + customFields.hashCode();
         return result;
     }
 
+    /**
+     * list of Custom Field objects, NEVER NULL.
+     */
+    public List<CustomField> getCustomFields() {
+        return customFields;
+    }
+
+    /**
+     * NOTE: The custom field(s) <b>must have correct database ID set</b> to be saved to Redmine. This is Redmine REST API's limitation.
+     */
+    public void setCustomFields(List<CustomField> customFields) {
+        this.customFields = customFields;
+    }
     public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
     }
